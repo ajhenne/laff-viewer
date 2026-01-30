@@ -3,8 +3,11 @@ import pandas as pd
 import plotly.express as px
 import os
 
-# --- CONFIGURATION ---
-st.set_page_config(page_title="GRB Fit Viewer", layout="wide")
+
+st.set_page_config(page_title="LAFF Viewer", layout="wide")
+
+pages = ["Burst Viewer", "Population Statistics"]
+default_page = 0
 
 @st.cache_data
 def load_data(filepath):
@@ -12,22 +15,23 @@ def load_data(filepath):
     return df
 
 
-
 ###############################################################################
 ### SIDEBAR 
 
 st.sidebar.title("Navigation")
 
+st.session_state.page = st.sidebar.radio("Go to", pages, index=default_page)
+
+st.sidebar.divider()
+
+
 datasets = [dt for dt in os.listdir('results')]
 
 def beautify_dataset_name(folder_name):
-
     date, version = folder_name.split('_')
     yy = date[:2]
     mm = date[2:4]
-
     return f"{mm}/20{yy} (laff v{version})"
-
 dataset_name_map = {beautify_dataset_name(d): d for d in datasets}
 
 selected_dataset = st.sidebar.selectbox("Select dataset", options=dataset_name_map.keys())
@@ -37,16 +41,11 @@ tab_afterglow = load_data(dataset_path + "/afterglow.csv")
 tab_flares = load_data(dataset_path + "/flares.csv")
 tab_pulses = load_data(dataset_path + "/pulses.csv")
 
-st.sidebar.divider()
-
-page = st.sidebar.radio("Go to", ["Burst Viewer", "Population Results"])
-
-
 
 ###############################################################################
 ### INDIVIDUAL BURST VIEWER
 
-if page == "Burst Viewer":
+if st.session_state.page == pages[0]:
 
     search_query = st.text_input("Enter GRB Name (e.g., GRB210112A):", "").strip().upper()
 
@@ -62,7 +61,7 @@ if page == "Burst Viewer":
         if not all([afterglow.empty, flares.empty, pulses.empty]):
 
             st.title(f"{search_query}")
-            
+
             xrt_path = os.path.join(dataset_path, "figures/xrt", f"{search_query}.png")
             bat_path = os.path.join(dataset_path, "figures/bat", f"{search_query}.png")
 
@@ -95,10 +94,12 @@ if page == "Burst Viewer":
     else:
         st.info("Enter a GRB name to display the results.")
 
+
 ###############################################################################
 ### INDIVIDUAL BURST VIEWER
 
-elif page == "Population Results":
+elif st.session_state.page == pages[1]:
+
     st.title("Population Statistics")
     st.write(f"Showing results for all {len(tab_afterglow)} bursts.")
 
@@ -108,8 +109,10 @@ elif page == "Population Results":
     col1, col2, col3 = st.columns(3)
     with col1:
         x_axis = st.selectbox("X-Axis Parameter", numeric_cols, index=0)
+        x_log = st.segmented_control("Axis scale", ("Linear-scale", "Log-scale"), selection_mode='single', default='Log-scale', key='xlogtoggle', label_visibility='collapsed')
     with col2:
         y_axis = st.selectbox("Y-Axis Parameter", numeric_cols, index=min(1, len(numeric_cols)-1))
+        y_log = st.segmented_control("Axis scale", ("Linear-scale", "Log-scale"), selection_mode='single', default='Log-scale', key='ylogtoggle', label_visibility='collapsed')
     with col3:
         color_by = st.selectbox("Color By (Optional)", ["None"] + numeric_cols)
 
@@ -119,13 +122,13 @@ elif page == "Population Results":
         y=y_axis, 
         color=None if color_by == "None" else color_by,
         hover_name="GRBname",  
-        log_x=True,         
-        log_y=True,
+        log_x=x_log == 'Log-scale',         
+        log_y=y_log == 'Log-scale',
         template="plotly_dark",
-        title=f"{y_axis} vs {x_axis}"
     )
 
     st.plotly_chart(fig, width='stretch')
+    
     
     with st.expander("View Full Data Table"):
         st.dataframe(tab_afterglow)
