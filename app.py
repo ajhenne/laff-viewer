@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
+import ast
+from functions import get_table_value, get_converted_fluence
+
+from random import randrange
 
 
 st.set_page_config(page_title="LAFF Viewer", layout="wide")
@@ -51,8 +55,12 @@ name_options = [x[0:3] + ' ' + x[3:] for x in name_options]
 
 if st.session_state.page == pages[0]:
 
+
     # search_query = st.text_input("Enter GRB Name:", "") # plain entry
-    search_query = st.selectbox("Enter GRB Name:", name_options, index=None, placeholder='Enter GRB Name', label_visibility='collapsed')
+    # search_query = st.selectbox("Enter GRB Name:", name_options, index=None, placeholder='Enter GRB Name', label_visibility='collapsed')
+    search_query = st.selectbox("Enter GRB Name:", name_options, index=randrange(len(name_options)-1), placeholder='Enter GRB Name', label_visibility='collapsed')
+
+    # st.divider()
 
     if search_query:
 
@@ -68,6 +76,40 @@ if st.session_state.page == pages[0]:
         if not all([afterglow.empty, flares.empty, pulses.empty]):
 
             st.header(f"{search_query}")
+
+            ### Summary table
+            # summary_left, summary_right = st.columns([2, 2], width=1000, border=True)
+            summary_left, summary_right = st.columns([0.5, 0.5], border=True)
+
+            # st.text(afterglow['conversion'].iloc[0])
+            # st.text(ast.literal_eval(afterglow['fluence'].iloc[0]))
+
+            with summary_left:
+                summary_left_info, summary_left_data = st.columns([0.5, 0.5])
+                with summary_left_info:
+                    st.text("T90 (s)")
+                    st.text("Redshift")
+                    st.markdown("Afterglow Fluence (erg cm$^{-2}$)")
+                with summary_left_data:
+                    st.text(get_table_value(afterglow, 'T90'))
+                    st.text(get_table_value(afterglow, 'redshift', "%.2g"))
+                    st.text(get_converted_fluence(afterglow, 'fluence', 'conversion'))
+
+
+
+            with summary_right:
+                summary_right_info, summary_right_data = st.columns([0.5, 0.5])
+                with summary_right_info:
+                    st.text("Pulse Count")
+                    st.text("Flare Count")
+                    st.text("Afterglow Breaks")
+                with summary_right_data:
+                    st.text(len(pulses))
+                    st.text("-" if afterglow.empty else len(flares))
+                    st.text(get_table_value(afterglow, 'breaknum', '%d'))
+
+
+
 
             xrt_path = os.path.join(dataset_path, "figures/xrt", f"{search_query}.png")
             bat_path = os.path.join(dataset_path, "figures/bat", f"{search_query}.png")
