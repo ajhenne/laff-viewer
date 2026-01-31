@@ -2,12 +2,16 @@ import pandas as pd
 import ast
 import math
 
-def get_table_value(df, colname, format="%.3g"):
+def get_table_value(df, colname, error=None, format="%.3g"):
 
     if df.empty or pd.isna(df[colname].iloc[0]):
         return "-"
 
     val = df[colname].iloc[0]
+
+    if error and not pd.isna(df[error].iloc[0]):
+        err = df[error].iloc[0]
+        return f"{format % val} ± {format % err}"
 
     return format % val
 
