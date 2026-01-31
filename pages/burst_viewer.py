@@ -125,17 +125,12 @@ if search_query:
     
         with st.expander('Function Parameters'):
 
-            st.text("The pulses are modelled using a FRED function")
+            st.text("These parameters describe the resultant FRED model fit, described in the 'About LAFF' section.")
 
-            st.latex(r"""
-                        
-                        F(t) =
-                        \begin{cases}
-                        A\times\exp\left(-\left(\frac{|t-t_m|}{r}\right)^s\right) & t \leq t_m\\
-                        A\times\exp\left(-\left(\frac{|t-t_m|}{d}\right)^s\right) & t > t_m
-                        \end{cases}
-                        """)
-            st.dataframe(pulse_table_model, hide_index=True)
+            if len(pulse_table):
+                st.dataframe(pulse_table_model, hide_index=True)
+            else:
+                st.info("No pulses found for this burst.")
         
 
         # GRBname,pulse_num,t_start,t_stop,t_peak,rise,decay,sharp,amplitude,fluence_rise,fluence_decay,chisq,rchisq,deltaAIC,BIC,Trig_ID,T90,T90_err,redshift,redshift_err,conversion,conversion_bat,bat_conversion_rchisq,dimple,t_rise,t_decay,duration,t_ratio,fluence,peak_flux,underlying_index,d_l,e_iso,L_p,L_iso,t_peak_z,t_start_z,t_end_z
@@ -188,10 +183,6 @@ else:
 
                 A full description of the LAFF fitting procedure can be found in Chapter 2 of my PhD thesis (*link available soon*).
                 """)
-
-    st.divider()
-
-    st.link_button("LAFF GitHub Repository", "https://github.com/ajhenne/laff/", icon=":material/code:")
 
     # 3. Call to Action
 

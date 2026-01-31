@@ -36,13 +36,13 @@ combined_names = tab_afterglow['GRBname'].unique().tolist() + tab_flares['GRBnam
 name_options = sorted(set(combined_names))
 name_options = [x[0:3] + ' ' + x[3:] for x in name_options]
 
+
 ###############################################################################
-### INDIVIDUAL BURST VIEWER
-
-
 
 pg = st.navigation([
     st.Page('pages/burst_viewer.py', title="Burst Viewer"),
-    st.Page('pages/population_stats.py', title='Population Statistics')],
-    )
+    st.Page('pages/population_stats.py', title="Population Statistics"),
+    st.Page('pages/laff_description.py', title="About LAFF")
+    ])
+
 pg.run()    
