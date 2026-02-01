@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 
-st.set_page_config(page_title="LAFF Viewer", layout="wide")
+st.set_page_config(page_title="LAFF", layout="wide")
 
 # pages = ["Burst Viewer", "Population Statistics"]
 # default_page = 0

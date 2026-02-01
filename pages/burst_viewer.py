@@ -8,18 +8,23 @@ from random import randrange
 from app import name_options, tab_afterglow, tab_flares, tab_pulses, dataset_path
 from functions import get_table_multiple_values, get_table_value, get_table_list, get_converted_fluence, print_grb_name
 
+st.set_page_config(page_title="LAFF - Burst Viewer")
+
 # search_query = st.text_input("Enter GRB Name:", "") # plain entry
-# search_query = st.selectbox("Enter GRB Name:", name_options, index=None, placeholder='Enter GRB Name', label_visibility='collapsed')
-search_query = st.selectbox("Enter GRB Name:", name_options, index=randrange(len(name_options)-1), placeholder='Enter GRB Name', label_visibility='collapsed')
+search_query = st.selectbox("Enter GRB Name:", name_options, index=None, placeholder='Enter GRB Name', label_visibility='collapsed')
+# search_query = st.selectbox("Enter GRB Name:", name_options, index=randrange(len(name_options)-1), placeholder='Enter GRB Name', label_visibility='collapsed')
 
 # st.divider()
 
 if search_query:
 
+
     search_query = search_query.strip().upper()
     search_query = search_query.replace(" ", "")
     search_query = search_query if search_query.startswith("GRB") else "GRB" + search_query
     search_query = search_query if search_query[-1].isalpha() else search_query + "A"
+
+    st.set_page_config(page_title=f"LAFF - {print_grb_name(search_query)}")
 
     afterglow = tab_afterglow[tab_afterglow['GRBname'].str.upper() == search_query]
     flares = tab_flares[tab_flares['GRBname'].str.upper() == search_query]
@@ -162,7 +167,7 @@ if search_query:
 
                 with slopes_col:
 
-                    st.markdown("**Slope Indices**")
+                    st.markdown("**Temporal Indices**")
                     
                     slp_val, slp_err = st.columns([0.4, 0.6])
                     fmt = "%.3g"

@@ -3,12 +3,14 @@ import plotly.express as px
 
 from app import tab_afterglow, tab_flares, tab_pulses
 
+st.set_page_config(page_title="LAFF - Population Statistics")
+
 
 st.title("Population Statistics")
 st.write(f"Showing results for all {len(tab_afterglow)} bursts.")
 
 # Select columns to plot
-numeric_cols = tab_afterglow.select_dtypes(include=['float64', 'int64']).columns.tolist()
+numeric_cols = tab_flares.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -21,7 +23,7 @@ with col3:
     color_by = st.selectbox("Color By (Optional)", ["None"] + numeric_cols)
 
 fig = px.scatter(
-    tab_afterglow, 
+    tab_flares, 
     x=x_axis, 
     y=y_axis, 
     color=None if color_by == "None" else color_by,

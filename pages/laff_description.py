@@ -1,5 +1,7 @@
 import streamlit as st
 
+st.set_page_config(page_title="LAFF - About")
+
 st.title("Lightcurve and Flare Fitter (LAFF)")
 
 st.text("Will be a brief description of how LAFF works and the modelling functions.")
@@ -17,6 +19,7 @@ st.latex(r"""
 
 st.subheader("XRT")
 
+st.subheader("Model Parameters")
 
 st.divider()
 
