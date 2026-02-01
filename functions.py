@@ -19,14 +19,25 @@ def get_table_value(df, colname, error=None, format="%.3g"):
 
     return format % val
 
-def get_table_list(df, colname, format="%.3g"):
+def get_table_multiple_values(df, colname, format="%.3g"):
 
     value_list = list(df[colname])
 
-    print(value_list)
-
     return [(format % val) for val in value_list]
 
+def get_table_list(df, colname):
+
+    values = ast.literal_eval(df[colname].iloc[0].replace('nan', 'None'))
+
+    values_list = []
+
+    for v in values:
+        try:
+            values_list.append(float(v))
+        except:
+            values_list.append(0)
+
+    return values_list
 
 def get_converted_fluence(df, fluence, conversion):
 
