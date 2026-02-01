@@ -204,9 +204,11 @@ if search_query:
 
                 st.divider()
 
+                total_flare_fluence =  "%.3g" % sum([x for x in flares['fluence']]) if len(flares['fluence']) else "-"
+
                 summary_data = {
                     "Afterglow fluence (erg/cm^2)": get_converted_fluence(afterglow, 'fluence', 'conversion'),
-                    "Total flare fluence (erg/cm^2)": "%.3g" % sum([x for x in flares['fluence']]),
+                    "Total flare fluence (erg/cm^2)": total_flare_fluence,
                     }
 
                 for label, value in summary_data.items():
