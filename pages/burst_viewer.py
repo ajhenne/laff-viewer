@@ -12,9 +12,8 @@ st.set_page_config(page_title="LAFF - Burst Viewer")
 
 # search_query = st.text_input("Enter GRB Name:", "") # plain entry
 search_query = st.selectbox("Enter GRB Name:", name_options, index=None, placeholder='Enter GRB Name', label_visibility='collapsed')
+# search_query = st.selectbox("Enter GRB Name:", name_options, index=541, placeholder='Enter GRB Name', label_visibility='collapsed')
 # search_query = st.selectbox("Enter GRB Name:", name_options, index=randrange(len(name_options)-1), placeholder='Enter GRB Name', label_visibility='collapsed')
-
-# st.divider()
 
 if search_query:
 
