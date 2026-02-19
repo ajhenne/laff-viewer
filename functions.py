@@ -72,14 +72,13 @@ def print_grb_name(name):
 
 ###############################################################################
 
-UNITS = {
-    'afterglow_fluence': ' (erg/cm^2)',
-    'total_flare_fluence': ' (erg/cm^2)',
-    'total_pulse_fluence': ' (erg/cm^2)',
-    'T90': ' (s)'
+PARAM_SETTINGS = {
+    'afterglow_fluence': {'unit': ' (erg/cm^2)', 'log': True},
+    'total_flare_fluence': {'unit': ' (erg/cm^2)', 'log': True},
+    'total_pulse_fluence': {'unit': ' (erg/cm^2)', 'log': True},
+    'T90': {'unit': ' (s)', 'log': True},
+    'redshift': {'log': False},
 }
-
-###  POPULATION STATS
 
 def create_plot(data, data_cols):
     xcol, ycol, lcol = st.columns(3)
@@ -93,53 +92,87 @@ def create_plot(data, data_cols):
         y_log = st.segmented_control("Y-Axis scale", ("Linear-scale", "Log-scale"), selection_mode='single', default='Log-scale', key='ylogtoggle', label_visibility='collapsed')
         
     with lcol:
-        color_by = st.selectbox("Color By (Optional)", ["None", "Specific GRB"] + list(data_cols.keys()))
+        color_options = ["None", "Specific GRB"] + list(data_cols.keys())
+        color_by = st.selectbox("Color By", color_options)
+        
+        display_title = color_by if color_by != "None" else ""
 
         selected_grbs = []
         if color_by == "Specific GRB":
-            selected_grbs = st.multiselect("Enter GRB Names:", options=name_options, placeholder='Select one or more GRBs', label_visibility='collapsed')
+            name_options = sorted(data['GRBname'].unique())
+            selected_grbs = st.multiselect("Enter GRB Names:", options=name_options, placeholder='Select GRBs', label_visibility='collapsed')
             selected_grbs = [x.replace(' ', '') for x in selected_grbs]
 
+    color_column = None
+    discrete_map = None
 
-    color_map = None
+    color_seq = ['#ff8c18'] + px.colors.qualitative.Plotly 
+
     if color_by == "Specific GRB":
-        color_map = {name: color for name, color in zip(selected_grbs, px.colors.qualitative.Plotly)}
-        color_map["Other GRBs"] = "lightgrey"
+        color_column = data['GRBname'].apply(lambda x: x if x in selected_grbs else "Other GRBs")
+        discrete_map = {"Other GRBs": "#a8a8a8"}
+        
+    elif color_by != "None":
+        if PARAM_SETTINGS.get(data_cols[color_by], {}).get('log', '') == True:
+            color_column = data_cols[color_by] + '_log'
+            display_title = f"Log {color_by}" if color_by != "None" else ""
+            
+        else:
+            color_column = data_cols[color_by]
+            display_title = color_by if color_by != "None" else ""
 
     fig = px.scatter(
         data,
         x=data_cols[x_axis],
         y=data_cols[y_axis],
-        color=get_color_logic(data, data_cols, color_by, selected_grbs),
-        color_discrete_map=color_map,
+        color=color_column,
+        color_discrete_map=discrete_map,
+        color_discrete_sequence=color_seq,
+        color_continuous_scale='Inferno',
         hover_name="GRBname",
         log_x=(x_log == 'Log-scale'),
         log_y=(y_log == 'Log-scale'),
-        labels={data_cols[x_axis]: x_axis + UNITS.get(data_cols[x_axis], ''), data_cols[y_axis]: y_axis + UNITS.get(data_cols[y_axis], '')}
+        labels={
+            data_cols[x_axis]: x_axis + PARAM_SETTINGS.get(data_cols[x_axis], {}).get('units', ''), 
+            data_cols[y_axis]: y_axis + PARAM_SETTINGS.get(data_cols[y_axis], {}).get('units', '')
+        },
+        template='ggplot2'
     )
 
-    # Make selected GRBs prominent
-    if color_by == "Specific GRB" and selected_grbs:
-        fig.update_traces(marker=dict(size=12, line=dict(width=1, color='DarkSlateGrey')), 
-                          selector=lambda t: t.name in selected_grbs)
+    fig.update_traces(marker=dict(size=8))
+
+    if color_by == "Specific GRB":
+        color_cycle = px.colors.qualitative.Plotly
+        color_index = 0
+        
+        for trace in fig.data:
+            if trace.name in selected_grbs:
+                trace.marker.color = color_cycle[color_index % len(color_cycle)]
+                trace.marker.size = 12
+                trace.marker.line = dict(width=2, color='DarkSlateGrey')
+                color_index += 1
+        
         traces = list(fig.data)
-        traces.sort(key=lambda t: 1 if t.name in selected_grbs else 0)
+        traces.sort(key=lambda x: 1 if x.name in selected_grbs else 0)
         fig.data = traces
 
-    fig.update_xaxes(exponentformat="e")
-    fig.update_yaxes(exponentformat="e")
-    fig.update_coloraxes(colorbar_exponentformat="e")
+    axis_settings = dict(showgrid=True, exponentformat="power")
     
-    st.plotly_chart(fig, width='stretch', height=600)
-    return
+    fig.update_xaxes(**axis_settings)
+    fig.update_yaxes(**axis_settings)
+    
+    if x_log == 'Log-scale':
+        fig.update_xaxes(dtick=1)
+    if y_log == 'Log-scale':
+        fig.update_yaxes(dtick=1)
+        
+    fig.update_layout(
+        font=dict(size=16),
+        margin=dict(t=30),
+        legend_title_text=display_title,
+    )
 
+    fig.update_coloraxes(colorbar_exponentformat="power", colorbar_title_text=display_title)
+    
 
-def get_color_logic(data, data_cols, color_var, grb_list):
-    if color_var == "None":
-        return None
-    
-    elif color_var == "Specific GRB":
-        return data['GRBname'].apply(lambda x: x if x in grb_list else "Other GRBs")
-    
-    else:
-        return data_cols[color_var]
+    st.plotly_chart(fig, use_container_width=True, height=600, theme=None)
