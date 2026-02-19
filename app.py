@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import os
 
+from custom_css import load_css
+
 st.set_page_config(page_title="LAFF", layout="wide")
 
 # pages = ["Burst Viewer", "Population Statistics"]
@@ -12,6 +14,7 @@ def load_data(filepath):
     df = pd.read_csv(filepath)
     return df
 
+load_css()
 
 ###############################################################################
 ### DATASET SELECTION 
