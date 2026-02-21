@@ -8,11 +8,19 @@ selectbox_dropdown = """
 
 </style>"""
 
+popstats_title = """
+<style>
+#population-statistics {
+    margin-top: -80px;
+}
+</style>"""
+
 
 def load_css():
     
     css_to_load = [
-        selectbox_dropdown
+        selectbox_dropdown,
+        popstats_title
     ]
 
     for css in css_to_load:
