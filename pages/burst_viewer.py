@@ -17,7 +17,6 @@ if 'viewer_grb' not in st.session_state:
 current_grb = st.session_state['viewer_grb']
 current_index = name_options.index(current_grb) if current_grb in name_options else None
 
-## GIVE KEY TO THIS AND IT SGHOULD GIVE UNIQUE CSS STYLING THING ?
 search_query = st.selectbox("Enter GRB Name:", name_options, index=current_index,
                             placeholder='Enter GRB Name', label_visibility='collapsed',
                             key='burst_viewer_entry')
