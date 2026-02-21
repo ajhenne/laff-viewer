@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from app import tab_afterglow, tab_flares, tab_pulses
-from functions import population_afterglow, population_flares
+from functions.main_functions import population_afterglow, population_flares
 
 st.set_page_config(page_title="LAFF - Population Statistics")
 

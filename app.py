@@ -2,7 +2,7 @@ import os
 import streamlit as st
 import pandas as pd
 
-from custom_css import load_css
+from functions.custom_css import load_css
 
 st.set_page_config(page_title="LAFF", layout="wide")
 

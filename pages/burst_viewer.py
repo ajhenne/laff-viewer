@@ -4,7 +4,7 @@ import os
 import ast
 
 from app import name_options, tab_afterglow, tab_flares, tab_pulses, dataset_path
-from functions import get_table_multiple_values, get_table_value, get_table_list, get_converted_fluence, print_grb_name
+from functions.main_functions import get_table_multiple_values, get_table_value, get_table_list, get_converted_fluence, print_grb_name
 
 st.set_page_config(page_title="LAFF - Burst Viewer")
 
