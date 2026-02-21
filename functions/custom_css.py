@@ -15,12 +15,20 @@ popstats_title = """
 }
 </style>"""
 
+burstviewer_searchbar = """
+<style>
+.st-key-burst_viewer_entry {
+    margin-top: -50px;
+}
+</style>"""
+
 
 def load_css():
     
     css_to_load = [
         selectbox_dropdown,
-        popstats_title
+        popstats_title,
+        burstviewer_searchbar
     ]
 
     for css in css_to_load:
