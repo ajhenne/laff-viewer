@@ -399,6 +399,7 @@ def population_flares(df_flare, df_pulse, data_cols, PARAM_SETTINGS, GRB_NAMES):
         color_discrete_map=discrete_map if color_by == "Specific GRB" else background_map,
         symbol_map=symbol_map,
         color_continuous_scale='Inferno',
+        color_discrete_sequence=px.colors.qualitative.Plotly,
         category_orders=sorted_categorical,
         hover_name="GRBname",
         hover_data=hover_dict,
