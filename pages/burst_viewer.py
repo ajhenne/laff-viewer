@@ -3,21 +3,31 @@ import pandas as pd
 import os
 import ast
 
-from random import randrange
-
 from app import name_options, tab_afterglow, tab_flares, tab_pulses, dataset_path
 from functions import get_table_multiple_values, get_table_value, get_table_list, get_converted_fluence, print_grb_name
 
 st.set_page_config(page_title="LAFF - Burst Viewer")
 
-# search_query = st.text_input("Enter GRB Name:", "") # plain entry
-search_query = st.selectbox("Enter GRB Name:", name_options, index=None, placeholder='Enter GRB Name', label_visibility='collapsed')
-# search_query = st.selectbox("Enter GRB Name:", name_options, index=541, placeholder='Enter GRB Name', label_visibility='collapsed')
-# search_query = st.selectbox("Enter GRB Name:", name_options, index=randrange(len(name_options)-1), placeholder='Enter GRB Name', label_visibility='collapsed')
+###############################################################################
+### SEARCH PROMPT
+
+if 'viewer_grb' not in st.session_state:
+    st.session_state['viewer_grb'] = None
+    
+current_grb = st.session_state['viewer_grb']
+current_index = name_options.index(current_grb) if current_grb in name_options else None
+
+
+search_query = st.selectbox("Enter GRB Name:", name_options, index=current_index, placeholder='Enter GRB Name', label_visibility='collapsed')
+
+
+###############################################################################
+### SEARCH HANDLING
 
 if search_query:
-
-
+    
+    st.session_state['viewer_grb'] = search_query
+    
     search_query = search_query.strip().upper()
     search_query = search_query.replace(" ", "")
     search_query = search_query if search_query.startswith("GRB") else "GRB" + search_query
@@ -25,14 +35,17 @@ if search_query:
 
     st.set_page_config(page_title=f"LAFF - {print_grb_name(search_query)}")
 
+
     afterglow = tab_afterglow[tab_afterglow['GRBname'].str.upper() == search_query]
     flares = tab_flares[tab_flares['GRBname'].str.upper() == search_query]
     pulses = tab_pulses[tab_pulses['GRBname'].str.upper() == search_query]
+    
 
     if not all([afterglow.empty, flares.empty, pulses.empty]):
 
         st.header(f"{print_grb_name(search_query)}")
 
+        ###############################################################################
         ### SUMMARY TABLE
 
         summary_left, summary_right = st.columns([0.5, 0.5], border=True)
@@ -68,7 +81,8 @@ if search_query:
 
         st.divider()
 
-        ###################################################################
+
+        ###############################################################################
         ### BAT SECTION
 
         st.subheader("Swift-BAT")
@@ -139,7 +153,7 @@ if search_query:
         st.divider()
 
 
-        ###################################################################
+        ###############################################################################
         ### XRT SECTION
 
         st.subheader("Swift-XRT")
@@ -276,6 +290,3 @@ else:
 
                 A full description of the LAFF fitting procedure can be found in Chapter 2 of my PhD thesis (*link available soon*).
                 """)
-
-    # 3. Call to Action
-
