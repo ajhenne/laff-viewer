@@ -1,6 +1,5 @@
 import ast
 import streamlit as st
-import plotly.express as px
 import numpy as np
 import pandas as pd
 
@@ -16,21 +15,21 @@ PARAM_SETTINGS = {
     'dimple': {},
 
     # FLARE SPECIFIC
-    'fluence': {'units': 'erg/cm^2', 'log': True},
+    'fluence': {'units': 'erg\u2009cm<sup>-2</sup>', 'log': True},
     'duration': {'units': 's', 'log': True},
     't_peak': {'units': 's', 'log': True},
     't_ratio': {},
     'underlying_index': {},
     
-    'peak_flux': {'units': 'check', 'log': True},
-    'e_iso': {'units': 'check', 'log': True},
-    'L_p': {'units': 'check', 'log': True},
-    'L_iso': {'units': 'check', 'log': True},
+    'peak_flux': {'units': 'erg\u2009cm<sup>-2</sup>\u2009s<sup>-1</sup>', 'log': True},
+    'e_iso': {'units': 'erg', 'log': True},
+    'L_p': {'units': 'erg\u2009s<sup>-1</sup>', 'log': True},
+    'L_iso': {'units': 'erg\u2009s<sup>-1</sup>', 'log': True},
     
     # AFTERGLOW SPECIFIC
-    'afterglow_fluence': {'units': 'erg/cm^2', 'log': True},
-    'total_flare_fluence': {'units': 'erg/cm^2', 'log': True},
-    'total_pulse_fluence': {'units': 'erg/cm^2', 'log': True},
+    'afterglow_fluence': {'units': 'erg\u2009cm<sup>-2</sup>', 'log': True},
+    'total_flare_fluence': {'units': 'erg\u2009cm<sup>-2</sup>', 'log': True},
+    'total_pulse_fluence': {'units': 'erg\u2009cm<sup>-2</sup>', 'log': True},
     
 }
 
@@ -135,36 +134,3 @@ elif selected_dataset == 'Pulses/Flares':
     }
     
     population_flares(flare_data, pulse_data, plot_cols, PARAM_SETTINGS, GRB_NAMES)
-        
-    
-    
-    
-    # def get_afterglow_fluence(x):
-    #     fluence, conversion = x
-    #     fluence = ast.literal_eval(fluence)[0]
-    #     return fluence * conversion
-    
-    # data['afterglow_fluence'] = data.apply(lambda row: get_afterglow_fluence((row['fluence'], row['conversion'])), axis=1)
-    
-    # data['dimple'] = data['dimple'].astype(str)
-    # data['breaknum'] = data['breaknum'].astype(str)
-    
-    # data['T90_log']                 = np.log10(data['T90'].replace(0, np.nan))
-    # data['redshift_log']            = np.log10(data['redshift'].replace(0, np.nan))
-    # data['afterglow_fluence_log']   = np.log10(data['afterglow_fluence'].replace(0, np.nan))
-    # data['total_flare_fluence_log'] = np.log10(data['total_flare_fluence'].replace(0, np.nan))
-    # data['total_pulse_fluence_log'] = np.log10(data['total_pulse_fluence'].replace(0, np.nan))
-    
-    
-    # plot_cols = {
-    #     'T90': 'T90',
-    #     'Redshift': 'redshift',
-    #     'Break Count': 'breaknum',
-    #     'Flare Count': 'flare_count',
-    #     'Pulse Count': 'pulse_count',
-    #     'Afterglow Fluence': 'afterglow_fluence',
-    #     'Total Flare Fluence': 'total_flare_fluence',
-    #     'Total Pulse Fluence': 'total_pulse_fluence',
-    #     'Dimple': 'dimple',
-    # }
-    
