@@ -1,7 +1,6 @@
 import ast
 import math
 import pandas as pd
-import numpy as np
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go 
@@ -190,7 +189,7 @@ def population_afterglow(data, data_cols, PARAM_SETTINGS, GRB_NAMES):
     ############################################################
     ## AXIS CONFIGS
 
-    fig.update_traces(marker=dict(size=8))
+    fig.update_traces(marker=dict(size=10, line=dict(width=0.7, color='black')))
 
     axis_settings = dict(showgrid=True, exponentformat="power")
     fig.update_xaxes(**axis_settings)
@@ -220,8 +219,8 @@ def population_afterglow(data, data_cols, PARAM_SETTINGS, GRB_NAMES):
         for trace in fig.data:
             if trace.name in selected_grbs:
                 trace.marker.color = color_cycle[color_index % len(color_cycle)]
-                trace.marker.size = 12
-                trace.marker.line = dict(width=2, color='DarkSlateGrey')
+                trace.marker.size = 15
+                trace.marker.line = dict(width=2, color='black')
                 color_index += 1
         
         traces = list(fig.data)
@@ -325,6 +324,13 @@ def population_flares(df_flare, df_pulse, data_cols, PARAM_SETTINGS, GRB_NAMES):
     if pulse_toggle: sources_to_show.append('Pulses')
     
     plot_data = combined_df[combined_df['Type'].isin(sources_to_show)].copy()
+    
+    filter_cols = [data_cols[x_axis], data_cols[y_axis]]
+    
+    if color_by not in ["None", "Specific GRB"]:
+        filter_cols.append(data_cols[color_by])
+
+    plot_data = plot_data.dropna(subset=filter_cols)
     
     ############################################################
     ## COLOURING CONFIG
@@ -512,9 +518,8 @@ def population_flares(df_flare, df_pulse, data_cols, PARAM_SETTINGS, GRB_NAMES):
         is_proxy = trace.x[0] is None if hasattr(trace, 'x') and len(trace.x) > 0 else False
 
         if is_other:
-            pass
-            # trace.hoverinfo = 'skip'
-            # trace.hovertemplate = None 
+            trace.hoverinfo = 'skip'
+            trace.hovertemplate = None 
             
         elif not is_proxy:
             trace.hoverinfo = 'all'
