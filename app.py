@@ -47,9 +47,9 @@ name_options = [x[0:3] + ' ' + x[3:] for x in name_options]
 ###############################################################################
 
 pg = st.navigation([
-    st.Page('pages/burst_viewer.py', title="Burst Viewer"),
-    st.Page('pages/population_stats.py', title="Population Statistics"),
-    st.Page('pages/laff_description.py', title="About LAFF")
+    st.Page('pages/burst_viewer.py', title="Burst Viewer", icon=':material/search:'),
+    st.Page('pages/population_stats.py', title="Population Statistics", icon=':material/insert_chart:'),
+    st.Page('pages/about_laff.py', title="About LAFF", icon=':material/help:')
     ])
 
 pg.run()    
