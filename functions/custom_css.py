@@ -8,17 +8,18 @@ selectbox_dropdown = """
 
 </style>"""
 
-popstats_title = """
+page_headers = """
 <style>
 #population-statistics {
     margin-top: -80px;
 }
-</style>"""
 
-burstviewer_searchbar = """
-<style>
 .st-key-burst_viewer_entry {
     margin-top: -50px;
+}
+
+#lightcurve-and-flare-fitter-laff {
+    margin-top: -80px;
 }
 </style>"""
 
@@ -27,8 +28,7 @@ def load_css():
     
     css_to_load = [
         selectbox_dropdown,
-        popstats_title,
-        burstviewer_searchbar
+        page_headers,
     ]
 
     for css in css_to_load:
