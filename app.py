@@ -1,6 +1,6 @@
+import os
 import streamlit as st
 import pandas as pd
-import os
 
 from custom_css import load_css
 
@@ -15,6 +15,10 @@ def load_data(filepath):
     return df
 
 load_css()
+
+COL_PRIMARY = 'rgba(255, 140, 24, 1)'
+COL_SECONDARY = 'rgba(72, 138, 139, 1)'
+COL_TERTIARTY = 'rgba(63, 81, 181, 1)'
 
 ###############################################################################
 ### DATASET SELECTION 
