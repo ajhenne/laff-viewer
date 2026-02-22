@@ -78,7 +78,7 @@ if search_query:
                     with col2:
                         st.text(value)
 
-        st.markdown(":grey[:small[See [About LAFF](/laff_description) for a description of the model parameters, and the fitting procedure.]]")
+        st.markdown(":grey[:small[See [About LAFF](/about_laff) for a description of the model parameters, and the fitting procedure.]]")
 
         st.divider()
 
@@ -105,8 +105,8 @@ if search_query:
 
             summary_data = {
                 "BAT count-to-flux conversion": bat_conversion,
+                "Conversion Reduced Chi-Square": get_table_value(pulses, 'bat_conversion_rchisq'),
                 "Total fluence in pulses": ("%.3g" % total_pulse_fluence) if (bat_conversion != "-" and not pd.isna(bat_conversion)) else "-",
-                "Chi-Square": "tba"
                 }
 
             for label, value in summary_data.items():
@@ -193,7 +193,7 @@ if search_query:
                     with slp_err:
                         slopes_err = get_table_list(afterglow, 'slopes_err')
                         for e in slopes_err:
-                            st.markdown(f"($\pm$ {fmt % e})")
+                            st.markdown(rf"($\pm$ {fmt % e})")
 
                 with breaks_col:
 
@@ -214,7 +214,7 @@ if search_query:
 
                     with brk_err:
                         for e in breaks_err:
-                            st.markdown(f"($\pm$ {fmt % e})")
+                            st.markdown(rf"($\pm$ {fmt % e})")
 
                 st.divider()
 
@@ -269,7 +269,7 @@ if search_query:
                     st.dataframe(flare_table_model, hide_index=True)
                 
             else:
-                st.info("No pulses found for this burst.")
+                st.info("No flares found for this burst.")
             
             st.divider()
 
