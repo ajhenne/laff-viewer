@@ -43,7 +43,7 @@ about_tabs = """
         margin-bottom: -2px;
         border-bottom: 2px solid rgba(49, 51, 63, 0.1);
     }
-    .st-emotion-cache-bnbx0a {
+    .st-key-about_tab > div > div > .st-emotion-cache-bnbx0a {
         border-bottom: 2px solid rgb(255, 140, 24) !important;
         background-color: rgba(0,0,0,0);
     }
