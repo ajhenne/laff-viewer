@@ -39,6 +39,8 @@ tab_afterglow = load_data(dataset_path + "/afterglow.csv")
 tab_flares = load_data(dataset_path + "/flares.csv")
 tab_pulses = load_data(dataset_path + "/pulses.csv")
 
+LENGTHS = len(tab_afterglow), len(tab_flares), len(tab_pulses)
+
 combined_names = tab_afterglow['GRBname'].unique().tolist() + tab_flares['GRBname'].unique().tolist() + tab_pulses['GRBname'].unique().tolist()
 name_options = sorted(set(combined_names))
 name_options = [x[0:3] + ' ' + x[3:] for x in name_options]

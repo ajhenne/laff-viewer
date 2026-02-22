@@ -18,9 +18,8 @@ page_headers = """
     margin-top: -50px;
 }
 
-#lightcurve-and-flare-fitter-laff {
+#laff-viewer {
     margin-top: -80px;
-}
 </style>"""
 
 
