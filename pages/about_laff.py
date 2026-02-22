@@ -106,15 +106,82 @@ elif selected_tab == 'BAT Fitting':
     
 elif selected_tab == 'Parameters':
     
-    st.markdown("Parameters")
-
-    params_data = [
-        ["$T_{90}$", "s", "Duration containing 90% of the total burst fluence. See [BAT Catalog](https://swift.gsfc.nasa.gov/results/batgrbcat/)."],
-        ["$E_{peak}$", "keV", r"The photon energy at which the $F_{\nu}$ spectrum peaks: $E_{peak} = E_{0}(2+\alpha)$"],
-        ["Fluence", "erg cm$^{-2}$", "Total energy flux integrated over the $T_{90}$ interval."],
-        ["$\Gamma_{XRT}$", "index", "Power-law index of the X-ray afterglow decay."]
+    about_par_cols = ['Parameter', 'Unit', 'Notes']
+    
+    general_data = [
+        ["$T_{90}$", "s", "The time for 5% to 95% of the GRB's photons to be detected by the BAT instrument."],
+        ["Redshift ($z$)", "-", "Redshift of the GRB."],
     ]
     
-    df = pd.DataFrame(params_data, columns=["Parameter", "Unit", "Notes"])
+    afterglows_data = [
+        ["Break Count", "-", "The number of power law breaks in the best-fit afterglow model."],
+        ["Flare Count", "-", "The number of flares found in the XRT light curve."],
+        ["Pulse Count", "-", "The number of pulses found in the BAT light curve."],
+        ["Afterglow Fluence", "erg cm$^{-2}$", "The total fluence in the afterglow component, across the entire XRT light curve. Native band of 0.3-10 keV."],
+        ["Total Flare Fluence", "erg cm$^{-2}$", "The summed fluence of all individual flare component fluences. Native band of 0.3-10 keV."],
+        ["Total Pulse Fluence", "erg cm$^{-2}$", "The summed fluence of all individual pulse component fluences. Native band of 25-50 keV."],
+    ]
+    
+    flares_data = [
+        ["Fluence", "erg cm$^{-2}$", "The fluence across the flare model."],
+        [r"Peak Time ($t_\textrm{peak}$)", "s", "The time (since BAT trigger) the flare reaches it's peak."],
+        [r"Rise/Decay Ratio ($t_\textrm{ratio}$)", "-", "The rise time over decay time value, where values <1 signify a decay time longer than rise."],
+        ["Peak Flux ($F_p$)", "erg cm$^{-2}$ s$^{-1}$", "The flux value at the peak of the flare, from the peak count rate of the flare with conversion applied."],
+        [r"Isotropic Energy ($E_\textrm{iso}$)", "erg", r"The total energy budget of the GRB if it were emitting isotropically  $= 4\pi D_{l}^{2}S_{\nu}/(1+z)$."],
+        [r"Mean Luminosity ($L_\textrm{iso}$)", "erg s$^{-1}$", r"The mean luminosity of the flare $=(1+z)E_\textrm{iso}/\Delta T$."],
+        [r"Peak Luminosity ($L_p$)", "erg s$^{-1}$", r"The peak luminosity of the flare $= 4\pi D_{l}^{2}F_p/(1+z)$."],
+    ]
+    # fl dur peaktime rise/decay ratio peakfl isotrop_e peaklum iso_u=lum t90 redshift afterglowfl underlyingaftergloxindex dim
+    
+    
+    general_df = pd.DataFrame(general_data, columns=about_par_cols)
+    afterglow_df = pd.DataFrame(afterglows_data, columns=about_par_cols)
+    flares_df = pd.DataFrame(flares_data, columns=about_par_cols)
+    
+    
+    st.markdown(r"""
+                A breakdown of all the obtained, modelled and calculated parameters used in this work.
 
-    st.markdown(df.to_markdown(index=False))
+                
+                ##### Fluence
+                
+                Fluence is calculated as the integral across a model $f(t)$, whether that's the broken power laws for the afterglow or FRED curves for flares/pulses:
+                
+                $\int_{t_\textrm{start}}^{t_{stop}} f(t) \times C\,dt\,$
+                
+                The start and stop times, $t_\textrm{start}$ and $t_\textrm{stop}$ are the entire available time range across the XRT light curve for afterglow fluences, or simple the model start and stop times for pulses and flares. Since the fitted data is in count rate, it is converted into the correct native band flux with a conversion factor $C$, given by the *Swift*-XRT catalogue for flares, and calculated as described in the BAT section for pulses.
+                
+                In practice, this is calculated by LAFF numerically rather than analytically, using the `scipy.integrate.trapezoid` method, calculated piecewise by power law, or flare rise and decay.
+                
+                """)
+    
+    st.divider()
+                
+    st.markdown(r"""
+                #### General GRB Values
+                
+                Generic values obtained per burst from the [*Swift*-BAT Catalog](https://swift.gsfc.nasa.gov/results/batgrbcat/) (Lien et al. 2016).
+                """)
+                
+    st.markdown(general_df.to_markdown(index=False))
+    
+    st.divider()
+
+    st.markdown("""
+                #### Afterglow Specific
+                """)
+                
+    st.markdown(afterglow_df.to_markdown(index=False))
+    
+    st.divider()
+    
+    st.markdown(r"""
+                #### Flare/Pulse Specific
+                
+                $S_\nu$ is the fluence in the instrument's native energy range.
+                
+                $D_l$ is the luminosity distance calculated using redshift of the burst with the [WMAP nine-year results (Hinshaw et al. 2013)](https://dx.doi.org/10.1088/0067-0049/208/2/19): a flat $\Lambda$CDM cosmology, with $H_0 = 69.32\textrm\,{km}^{-1}\,\textrm{Mpc}^{-1}$, $\Omega_m = 0.2865$ and $\Omega_{\Lambda} = 0.7135$.
+                """)
+                
+    st.markdown(flares_df.to_markdown(index=False))
+                
