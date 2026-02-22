@@ -53,11 +53,20 @@ about_table = """
     <style>
         table {
             width: 100%;
+            border: 0 !important;
         }
         th {
             text-align: left !important;
             background-color: rgba(150, 150, 150, 0.1);
         }
+        th:first-child {
+            width: 200px;
+        }
+        
+        th:nth-child(2){
+            width: 120px;
+        }
+        
         td {
             vertical-align: top !important;
         }

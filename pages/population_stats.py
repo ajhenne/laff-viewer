@@ -83,17 +83,10 @@ if selected_dataset == 'Afterglows':
         'Afterglow Fluence': 'afterglow_fluence',
         'Total Flare Fluence': 'total_flare_fluence',
         'Total Pulse Fluence': 'total_pulse_fluence',
-        'Dimple': 'dimple',
+        # 'Dimple': 'dimple',
     }
     population_afterglow(data, plot_cols, PARAM_SETTINGS, GRB_NAMES)
-    #maybes
-    # maybe_cols = {
-    #     'Slopes': slopes,
-    #     'Break Times': breaks,
-    #     'Normal': normal,
-    # 'dimple'
-    # }
-    
+
     
 ############################################################
 elif selected_dataset == 'Pulses/Flares':
@@ -130,7 +123,8 @@ elif selected_dataset == 'Pulses/Flares':
         'Redshift': 'redshift',
         'Afterglow Fluence': 'afterglow_fluence',
         'Underlying Afterglow Index': 'underlying_index',
-        'Dimple': 'dimple',
+        # 'Dimple': 'dimple',
+        # 'chisq': 'bat_conversion_rchisq',
     }
     
     population_flares(flare_data, pulse_data, plot_cols, PARAM_SETTINGS, GRB_NAMES)

@@ -23,6 +23,8 @@ selected_tab = st.segmented_control(
 st.session_state['about_tab_selection'] = selected_tab
 
 
+###############################################################################
+
 if selected_tab == 'Overview':
     
     st.markdown(f"""
@@ -55,12 +57,14 @@ if selected_tab == 'Overview':
             - Evans, P.A. et al. (2007) ‘An online repository of Swift/XRT light curves of gamma-ray bursts’, Astronomy & Astrophysics, 469(1), pp. 379–385. Available at: https://doi.org/10.1051/0004-6361:20077530.                
             - Evans, P.A. et al. (2009) ‘Methods and results of an automatic analysis of a complete sample of Swift -XRT observations of GRBs’, Monthly Notices of the Royal Astronomical Society, 397(3), pp. 1177–1201. Available at: https://doi.org/10.1111/j.1365-2966.2009.14913.x.
             - Lien, A. et al. (2016) ‘THE THIRD SWIFT BURST ALERT TELESCOPE GAMMA-RAY BURST CATALOG’, The Astrophysical Journal, 829(1), p. 7. Available at: https://doi.org/10.3847/0004-637X/829/1/7.
-            - NASA HEASARC (2014) ‘HEAsoft: Unified Release of FTOOLS and XANADU’, Astrophysics Source Code Library, p. ascl:1408.004.
-            - Arnaud, K.A. (1996) ‘XSPEC: The First Ten Years’, Astronomical Data Analysis Software and Systems V, 101, p. 17.
+            - NASA HEASARC (2014) ‘HEAsoft: Unified Release of FTOOLS and XANADU’, Astrophysics Source Code Library, p. ascl:1408.004. Available at: https://heasarc.gsfc.nasa.gov/docs/software/lheasoft/.
+            - Arnaud, K.A. (1996) ‘XSPEC: The First Ten Years’, Astronomical Data Analysis Software and Systems V, 101, p. 17. Available at: https://heasarc.gsfc.nasa.gov/docs/software/xspec/.
 
 
             """, unsafe_allow_html=True)
 
+
+###############################################################################
 
 elif selected_tab == 'XRT Fitting':
     
@@ -91,6 +95,8 @@ elif selected_tab == 'XRT Fitting':
                 """)
     
     
+###############################################################################
+
 elif selected_tab == 'BAT Fitting':
     
     st.markdown("""
@@ -104,6 +110,8 @@ elif selected_tab == 'BAT Fitting':
                 """)
     
     
+###############################################################################
+
 elif selected_tab == 'Parameters':
     
     about_par_cols = ['Parameter', 'Unit', 'Notes']
@@ -123,21 +131,21 @@ elif selected_tab == 'Parameters':
     ]
     
     flares_data = [
-        ["Fluence", "erg cm$^{-2}$", "The fluence across the flare model."],
+        ["Flare Fluence", "erg cm$^{-2}$", "The fluence across the flare model."],
         [r"Peak Time ($t_\textrm{peak}$)", "s", "The time (since BAT trigger) the flare reaches it's peak."],
         [r"Rise/Decay Ratio ($t_\textrm{ratio}$)", "-", "The rise time over decay time value, where values <1 signify a decay time longer than rise."],
         ["Peak Flux ($F_p$)", "erg cm$^{-2}$ s$^{-1}$", "The flux value at the peak of the flare, from the peak count rate of the flare with conversion applied."],
         [r"Isotropic Energy ($E_\textrm{iso}$)", "erg", r"The total energy budget of the GRB if it were emitting isotropically  $= 4\pi D_{l}^{2}S_{\nu}/(1+z)$."],
         [r"Mean Luminosity ($L_\textrm{iso}$)", "erg s$^{-1}$", r"The mean luminosity of the flare $=(1+z)E_\textrm{iso}/\Delta T$."],
         [r"Peak Luminosity ($L_p$)", "erg s$^{-1}$", r"The peak luminosity of the flare $= 4\pi D_{l}^{2}F_p/(1+z)$."],
+        ["Underlying Afterglow Index", "-", "The decay slope of the afterglow during which the peak of the flare occurs. For BAT pulses that occur before the XRT light curve beings, the earliest power law slope is used."],
     ]
-    # fl dur peaktime rise/decay ratio peakfl isotrop_e peaklum iso_u=lum t90 redshift afterglowfl underlyingaftergloxindex dim
-    
     
     general_df = pd.DataFrame(general_data, columns=about_par_cols)
     afterglow_df = pd.DataFrame(afterglows_data, columns=about_par_cols)
     flares_df = pd.DataFrame(flares_data, columns=about_par_cols)
     
+    ###########################################################################
     
     st.markdown(r"""
                 A breakdown of all the obtained, modelled and calculated parameters used in this work.
@@ -180,8 +188,10 @@ elif selected_tab == 'Parameters':
                 
                 $S_\nu$ is the fluence in the instrument's native energy range.
                 
-                $D_l$ is the luminosity distance calculated using redshift of the burst with the [WMAP nine-year results (Hinshaw et al. 2013)](https://dx.doi.org/10.1088/0067-0049/208/2/19): a flat $\Lambda$CDM cosmology, with $H_0 = 69.32\textrm\,{km}^{-1}\,\textrm{Mpc}^{-1}$, $\Omega_m = 0.2865$ and $\Omega_{\Lambda} = 0.7135$.
+                $D_l$ is the luminosity distance calculated using redshift of the burst with the [WMAP nine-year results (Hinshaw et al. 2013)](https://dx.doi.org/10.1088/0067-0049/208/2/19): a flat $\Lambda$CDM cosmology, with $H_0 = 69.32\,\textrm{km}^{-1}\,\textrm{Mpc}^{-1}$, $\Omega_m = 0.2865$ and $\Omega_{\Lambda} = 0.7135$.
                 """)
                 
     st.markdown(flares_df.to_markdown(index=False))
                 
+                
+###############################################################################
