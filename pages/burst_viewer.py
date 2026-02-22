@@ -281,7 +281,7 @@ if search_query:
 else:
 
     st.container()
-    st.header("LAFF Viewer")
+    st.title("Burst Viewer")
 
 
     st.markdown("""
