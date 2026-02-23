@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+authors:
+  - family-names: "Hennessy"
+    given-names: "Adam"
+    orcid: "https://orcid.org/0000-0001-7650-908X"
+title: "Lightcurve and Flare Fitter (LAFF)"
+version: "1.0.0"
+date-released: "2025-07-11"
+url: "https://github.com/ajhenne/laff"
+
+preferred-citation:
+  type: thesis
+  authors:
+    - family-names: "Hennessy"
+      given-names: "Adam"
+  title: "The Central Engines of Gamma-Ray Bursts"
+  year: 2026
+  month: 1
+  address: "Leicester, United Kingdom"
+  institution:
+    name: "University of Leicester"
+  thesis-type: "PhD Thesis"
+  # url: "https://handle.net/your-thesis-link"
+  # doi: "10.0000/thesis.doi.here"
