@@ -17,12 +17,20 @@ def get_table_value(df, colname, error=None, format="%.3g"):
 
     val = df[colname].iloc[0]
 
-    if error and not pd.isna(df[error].iloc[0]):
-        err = df[error].iloc[0]
+    try:
+        if isinstance(val, str):
+            val = float(val.strip()) 
+        else:
+            val = float(val)
+    except (ValueError, TypeError):
+        return str(val)
 
+    if error and not pd.isna(df[error].iloc[0]):
+        err_val = df[error].iloc[0]
         try:
+            err = float(err_val)
             return f"{format % val} ± {format % err}"
-        except TypeError:
+        except (TypeError, ValueError):
             pass
 
     return format % val
