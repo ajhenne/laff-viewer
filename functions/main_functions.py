@@ -246,6 +246,15 @@ def population_afterglow(data, data_cols, PARAM_SETTINGS, GRB_NAMES):
             
 ################################################################
 ################################################################      
+
+
+def plot_histogram():
+    
+    return
+
+def plot_scatter():
+    
+    return
             
             
 def population_flares(df_flare, df_pulse, data_cols, PARAM_SETTINGS, GRB_NAMES):

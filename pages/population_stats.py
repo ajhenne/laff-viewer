@@ -38,17 +38,23 @@ GRB_NAMES = sorted(list(set(tab_afterglow['GRBname']) | set(tab_flares['GRBname'
 st.title("Population Statistics")
 
 
-if 'plotting_tab_choice' not in st.session_state:
-    st.session_state['plotting_tab_choice'] = "Afterglows"
+if 'plot_choice_population' not in st.session_state:
+    st.session_state['plot_choice_population'] = 'Afterglows'
 
-selected_dataset = st.segmented_control("Select population:", ["Afterglows", "Pulses/Flares"], width='stretch', default=st.session_state['plotting_tab_choice'], selection_mode='single')
+selected_dataset = st.segmented_control("Select population:", ["Afterglows", "Pulses/Flares"], width='stretch', default=st.session_state['plot_choice_population'], selection_mode='single')
 
 if selected_dataset is None:
-    selected_dataset = st.session_state['plotting_tab_choice']
+    selected_dataset = st.session_state['plot_choice_population']
 
-if selected_dataset != st.session_state['plotting_tab_choice']:
-    st.session_state['plotting_tab_choice'] = selected_dataset
+if selected_dataset != st.session_state['plot_choice_population']:
+    st.session_state['plot_choice_population'] = selected_dataset
     st.rerun()
+    
+    
+if 'plot_choice_type' not in st.session_state:
+    st.session_state['plot_choice_type'] = 'Scatter'
+    
+selected_plottype = st.segmented_control("Plot type:", ["Scatter", "Histogram"], label_visibility='collapsed')
     
 
 ############################################################
