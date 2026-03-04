@@ -10,3 +10,6 @@ showWidgetBorder=true
 
 [theme.dark.sidebar]
 primaryColor="rgb(255, 140, 24)"
+
+[server]
+runOnSave = true
