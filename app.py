@@ -16,7 +16,7 @@ load_css()
 
 COL_PRIMARY = 'rgba(255, 140, 24, 1)'
 COL_SECONDARY = 'rgba(72, 138, 139, 1)'
-COL_TERTIARTY = 'rgba(63, 81, 181, 1)'
+COL_TERTIARY = 'rgba(63, 81, 181, 1)'
 
 ###############################################################################
 ### DATASET SELECTION 
