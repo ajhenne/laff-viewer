@@ -9,6 +9,7 @@ __pycache__/
 .DS_Store
 edits.txt
 .vscode/
+*%Desktop%*
 secrets.toml
 
 # Distribution / packaging

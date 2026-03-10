@@ -11,25 +11,24 @@ st.set_page_config(page_title="LAFF - About")
 st.title("LAFF Viewer")
 
 # 1. Initialize session state
-if 'about_tab_selection' not in st.session_state:
-    st.session_state['about_tab_selection'] = 'Overview'
+if "about_tab_selection" not in st.session_state:
+    st.session_state["about_tab_selection"] = "Overview"
 
 selected_tab = st.segmented_control(
     "Navigation",
-    ['Overview', 'XRT Fitting', 'BAT Fitting', 'Parameters'],
-    default=st.session_state['about_tab_selection'],
-    key='about_tab',
+    ["Overview", "XRT Fitting", "BAT Fitting", "Parameters"],
+    default=st.session_state["about_tab_selection"],
+    key="about_tab",
     width=600,
-    label_visibility="collapsed"
+    label_visibility="collapsed",
 )
 
-st.session_state['about_tab_selection'] = selected_tab
+st.session_state["about_tab_selection"] = selected_tab
 
 
 ###############################################################################
 
-if selected_tab == 'Overview':
-    
+if selected_tab == "Overview":
     st.markdown(f"""
                 Lightcurve and Flare Fitter (LAFF) is a Python-based data pipeline, written as part of my PhD at the University of Leicester. It is an open source tool for the gamma-ray burst (GRB) community to provide hte automated fitting of *Swift* GRB light curves. Originally insprired by the afterglow fitter of the [*Swift*-XRT GRB Catalogue](https://www.swift.ac.uk/xrt_live_cat/), this code extends the functionality by providing modelling of the flare components, on top of identifying the underlying afterglow. Additionally, there is an algorthim for the BAT data to identify and fit gamma-ray pulses. This allows for the complete temporal modelling across the X-ray and gamma-ray regime of every GRB from entirety of the *Swift* mission.
                 
@@ -41,11 +40,16 @@ if selected_tab == 'Overview':
                 
                 """)
 
-    st.link_button("LAFF GitHub Repository", "https://github.com/ajhenne/laff/", icon=":material/code:")
+    st.link_button(
+        "LAFF GitHub Repository",
+        "https://github.com/ajhenne/laff/",
+        icon=":material/code:",
+    )
 
     st.divider()
 
-    st.markdown("""
+    st.markdown(
+        """
             #### Acknowledgements
             
             This work made use of data supplied by the UK Swift Science Data Centre at the University of Leicester.
@@ -64,13 +68,14 @@ if selected_tab == 'Overview':
             - Arnaud, K.A. (1996) ‘XSPEC: The First Ten Years’, Astronomical Data Analysis Software and Systems V, 101, p. 17. Available at: https://heasarc.gsfc.nasa.gov/docs/software/xspec/.
 
 
-            """, unsafe_allow_html=True)
+            """,
+        unsafe_allow_html=True,
+    )
 
 
 ###############################################################################
 
-elif selected_tab == 'XRT Fitting':
-    
+elif selected_tab == "XRT Fitting":
     st.markdown("""
                 The basic premise is to identify regions of data where there may be flares ('deviations'), fit the afterglow to the rest of the data, before fitting flare models to the deviations. A full and detailed method is described in my thesis (accepted with corrections, link will be updated soon).
                 
@@ -80,7 +85,7 @@ elif selected_tab == 'XRT Fitting':
                 
                 Finally, the deviations can be re-added and a flare component added. Each deviation may represent one or many flares, so components are iteratively added, and a similar weighted penalty function is used to determine if the addition of another component is statistically robust. The flare models used in this work are fast-rise exponential-decay (FRED), defined as:
                 """)
-                
+
     st.latex(r"""
             F(t) =
             \begin{cases}
@@ -88,20 +93,19 @@ elif selected_tab == 'XRT Fitting':
                 A\times\exp\left(-\left(\frac{|t-t_\textrm{peak}|}{d}\right)^s\right) & t > t_m
             \end{cases}
             """)
-    
+
     st.markdown(r"""
                 where amplitude $A$ corresponds to the peak (count rate) of the flare, $t_\textrm{peak}$ the timing of the flare peak, and $r$ and $d$ are variables that control the rise and decay slopes, respectively; sharpness $s$ controls the overall pulse shape.
             """)
-    
+
     st.markdown("""
                 All components are summed together to produce the final model. Count rate is converted to flux using a conversion obtained from the automatic XRT spectral fits available for each burst on the *Swift* website (Evans et al. 2009). From there, fluence can be calculated by integrating across the model during the flare time, and further energetics calculated using GRB T90, redshift, etc. values.
                 """)
-    
-    
+
+
 ###############################################################################
 
-elif selected_tab == 'BAT Fitting':
-    
+elif selected_tab == "BAT Fitting":
     st.markdown("""
                 The BAT fitting procedure required a different algorthim due to the differing challenges of this data. While there is no multi-phase afterglow to track, the data is inherently often noisier. The energy band used in this analysis is 25-50 keV.
                 
@@ -111,45 +115,92 @@ elif selected_tab == 'BAT Fitting':
                 
                 This time, the conversion to flux from count rate is obtained by my own spectral fitting of the BAT prompt emission data in the same energy band. HEASoft is used to process the raw event files using the standard data processing pipeline for BAT data, and the response files were loaded in Xspec for fitting. A simple power law was used across all bursts -- of the 10% of bursts fit better with a cut-off power law in Lien et al. (2016), there were few that this was true for both the 1-second peak and full time light curves. Additionally, of these, the majority have a peak above the 25-50 keV energy band usde here anyway. From the fitted models, Xspec can output the model count rate and flux in this energy band, providing the conversion factor.
                 """)
-    
-    
+
+
 ###############################################################################
 
-elif selected_tab == 'Parameters':
-    
-    about_par_cols = ['Parameter', 'Unit', 'Notes']
-    
+elif selected_tab == "Parameters":
+    about_par_cols = ["Parameter", "Unit", "Notes"]
+
     general_data = [
-        ["$T_{90}$", "s", "The time for 5% to 95% of the GRB's photons to be detected by the BAT instrument."],
+        [
+            "$T_{90}$",
+            "s",
+            "The time for 5% to 95% of the GRB's photons to be detected by the BAT instrument.",
+        ],
         ["Redshift ($z$)", "-", "Redshift of the GRB."],
     ]
-    
+
     afterglows_data = [
-        ["Break Count", "-", "The number of power law breaks in the best-fit afterglow model."],
+        [
+            "Break Count",
+            "-",
+            "The number of power law breaks in the best-fit afterglow model.",
+        ],
         ["Flare Count", "-", "The number of flares found in the XRT light curve."],
         ["Pulse Count", "-", "The number of pulses found in the BAT light curve."],
-        ["Afterglow Fluence", "erg cm$^{-2}$", "The total fluence in the afterglow component, across the entire XRT light curve. Native band of 0.3-10 keV."],
-        ["Total Flare Fluence", "erg cm$^{-2}$", "The summed fluence of all individual flare component fluences. Native band of 0.3-10 keV."],
-        ["Total Pulse Fluence", "erg cm$^{-2}$", "The summed fluence of all individual pulse component fluences. Native band of 25-50 keV."],
+        [
+            "Afterglow Fluence",
+            "erg cm$^{-2}$",
+            "The total fluence in the afterglow component, across the entire XRT light curve. Native band of 0.3-10 keV.",
+        ],
+        [
+            "Total Flare Fluence",
+            "erg cm$^{-2}$",
+            "The summed fluence of all individual flare component fluences. Native band of 0.3-10 keV.",
+        ],
+        [
+            "Total Pulse Fluence",
+            "erg cm$^{-2}$",
+            "The summed fluence of all individual pulse component fluences. Native band of 25-50 keV.",
+        ],
     ]
-    
+
     flares_data = [
         ["Flare Fluence", "erg cm$^{-2}$", "The fluence across the flare model."],
-        [r"Peak Time ($t_\textrm{peak}$)", "s", "The time (since BAT trigger) the flare reaches it's peak."],
-        [r"Rise/Decay Ratio ($t_\textrm{ratio}$)", "-", "The rise time over decay time value, where values <1 signify a decay time longer than rise."],
-        ["Peak Flux ($F_p$)", "erg cm$^{-2}$ s$^{-1}$", "The flux value at the peak of the flare, from the peak count rate of the flare with conversion applied."],
-        [r"Isotropic Energy ($E_\textrm{iso}$)", "erg", r"The total energy budget of the GRB if it were emitting isotropically  $= 4\pi D_{l}^{2}S_{\nu}/(1+z)$."],
-        [r"Mean Luminosity ($L_\textrm{iso}$)", "erg s$^{-1}$", r"The mean luminosity of the flare $=(1+z)E_\textrm{iso}/\Delta T$."],
-        [r"Peak Luminosity ($L_p$)", "erg s$^{-1}$", r"The peak luminosity of the flare $= 4\pi D_{l}^{2}F_p/(1+z)$."],
-        ["Underlying Afterglow Index", "-", "The decay slope of the afterglow during which the peak of the flare occurs. For BAT pulses that occur before the XRT light curve beings, the earliest power law slope is used."],
+        [
+            r"Peak Time ($t_\textrm{peak}$)",
+            "s",
+            "The time (since BAT trigger) the flare reaches it's peak.",
+        ],
+        [
+            r"Rise/Decay Ratio ($t_\textrm{ratio}$)",
+            "-",
+            "The rise time over decay time value, where values <1 signify a decay time longer than rise.",
+        ],
+        [
+            "Peak Flux ($F_p$)",
+            "erg cm$^{-2}$ s$^{-1}$",
+            "The flux value at the peak of the flare, from the peak count rate of the flare with conversion applied.",
+        ],
+        [
+            r"Isotropic Energy ($E_\textrm{iso}$)",
+            "erg",
+            r"The total energy budget of the GRB if it were emitting isotropically  $= 4\pi D_{l}^{2}S_{\nu}/(1+z)$.",
+        ],
+        [
+            r"Mean Luminosity ($L_\textrm{iso}$)",
+            "erg s$^{-1}$",
+            r"The mean luminosity of the flare $=(1+z)E_\textrm{iso}/\Delta T$.",
+        ],
+        [
+            r"Peak Luminosity ($L_p$)",
+            "erg s$^{-1}$",
+            r"The peak luminosity of the flare $= 4\pi D_{l}^{2}F_p/(1+z)$.",
+        ],
+        [
+            "Underlying Afterglow Index",
+            "-",
+            "The decay slope of the afterglow during which the peak of the flare occurs. For BAT pulses that occur before the XRT light curve beings, the earliest power law slope is used.",
+        ],
     ]
-    
+
     general_df = pd.DataFrame(general_data, columns=about_par_cols)
     afterglow_df = pd.DataFrame(afterglows_data, columns=about_par_cols)
     flares_df = pd.DataFrame(flares_data, columns=about_par_cols)
-    
+
     ###########################################################################
-    
+
     st.markdown(r"""
                 A breakdown of all the obtained, modelled and calculated parameters used in this work.
 
@@ -165,27 +216,27 @@ elif selected_tab == 'Parameters':
                 In practice, this is calculated by LAFF numerically rather than analytically, using the `scipy.integrate.trapezoid` method, calculated piecewise by power law, or flare rise and decay.
                 
                 """)
-    
+
     st.divider()
-                
+
     st.markdown(r"""
                 #### General GRB Values
                 
                 Generic values obtained per burst from the [*Swift*-BAT Catalog](https://swift.gsfc.nasa.gov/results/batgrbcat/) (Lien et al. 2016).
                 """)
-                
+
     st.markdown(general_df.to_markdown(index=False))
-    
+
     st.divider()
 
     st.markdown("""
                 #### Afterglow Specific
                 """)
-                
+
     st.markdown(afterglow_df.to_markdown(index=False))
-    
+
     st.divider()
-    
+
     st.markdown(r"""
                 #### Flare/Pulse Specific
                 
@@ -193,8 +244,8 @@ elif selected_tab == 'Parameters':
                 
                 $D_l$ is the luminosity distance calculated using redshift of the burst with the [WMAP nine-year results (Hinshaw et al. 2013)](https://dx.doi.org/10.1088/0067-0049/208/2/19): a flat $\Lambda$CDM cosmology, with $H_0 = 69.32\,\textrm{km}^{-1}\,\textrm{Mpc}^{-1}$, $\Omega_m = 0.2865$ and $\Omega_{\Lambda} = 0.7135$.
                 """)
-                
+
     st.markdown(flares_df.to_markdown(index=False))
-                
-                
+
+
 ###############################################################################
