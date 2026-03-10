@@ -10,6 +10,7 @@ __pycache__/
 edits.txt
 .vscode/
 *%Desktop%*
+secrets.toml
 
 # Distribution / packaging
 .Python
