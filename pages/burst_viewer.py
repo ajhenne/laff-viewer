@@ -14,7 +14,7 @@ from functions.main_functions import (
 )
 from functions.services import record_pageview
 
-record_pageview("/laff-viewer/burst-viewer")
+record_pageview("burst-viewer")
 
 st.set_page_config(page_title="LAFF - Burst Viewer")
 

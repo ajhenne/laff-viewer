@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 
-def record_pageview():
+def record_pageview(path: str = ''):
 
     query_ref = st.query_params.get("ref", None)
 
@@ -16,16 +16,18 @@ def record_pageview():
     url = "https://ajhenne.goatcounter.com/api/v0/count"
     token = st.secrets["goatcounter_key"]
 
-    page_path = st.context.url.replace(st.context.headers.get("Host", ""), "").split(
-        "?"
-    )[0]
+    page_path = "/laff-viewer"
+    page_title = "LAFF Viewer"
+    if path:
+        page_path += "/" + path
+        page_title += " - " + path
 
     payload = {
         "no_sessions": False,
         "hits": [
             {
                 "path": page_path,
-                "title": page_path.strip("/").replace("-", " ").title(),
+                "title": page_title,
                 "event": False,
                 "ip": ip,
                 "user_agent": user_agent,

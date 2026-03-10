@@ -4,7 +4,7 @@ import pandas as pd
 from app import LENGTHS
 from functions.services import record_pageview
 
-record_pageview('/laff-viewer/about')
+record_pageview('about')
 
 st.set_page_config(page_title="LAFF - About")
 

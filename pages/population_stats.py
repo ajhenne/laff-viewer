@@ -3,7 +3,7 @@ import streamlit as st
 from functions.main_functions import population_afterglow, population_flares
 from functions.services import record_pageview
 
-record_pageview('/laff-viewer/popstats')
+record_pageview('popstats')
 
 st.set_page_config(page_title="LAFF - Population Statistics")
 
