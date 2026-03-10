@@ -5,7 +5,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go 
 
-from app import COL_PRIMARY, COL_SECONDARY, COL_TERTIARY
+
 from functions.variables import PARAM_SETTINGS
 
 ###############################################################################
@@ -85,135 +85,6 @@ def print_grb_name(name):
 
 def population_afterglow(plot_data, plot_cols, GRB_NAMES):
 
-    if 'popstats_afterglow' not in st.session_state:
-        st.session_state['popstats_afterglow'] = {
-            'x_axis': plot_cols[0],
-            'y_axis': plot_cols[1],
-            'x_log': 'Log-scale',
-            'y_log': 'Log-scale',
-            'color_by': 'None',
-            'selected_grbs': []
-        }
-    persistent = st.session_state['popstats_afterglow']
-    
-    if 'popstats_shared_grbs' not in st.session_state:
-        st.session_state['popstats_shared_grbs'] = []
-    shared_grbs = st.session_state['popstats_shared_grbs']
-    selected_grbs = shared_grbs
-    
-        
-    with st.container(border=True):
-        xcol, ycol, lcol = st.columns(3)
-        
-        with xcol:
-            x_idx = plot_cols.index(persistent['x_axis']) if persistent['x_axis'] in plot_cols else 0
-            
-            x_axis = st.selectbox(
-                "X-Axis Parameter", plot_cols, index=x_idx,
-                key="x_axis_afterglow",
-                format_func=lambda x: PARAM_SETTINGS.get(x, {}).get('name', x)
-                )
-            
-            x_log = st.segmented_control(
-                "X-Axis scale", ("Linear-scale", "Log-scale"),
-                selection_mode='single',
-                default=persistent['x_log'],
-                key='x_log_afterglow',
-                label_visibility='collapsed')
-            
-        with ycol:
-            y_idx = plot_cols.index(persistent['y_axis']) if persistent['y_axis'] in plot_cols else 1
-            
-            y_axis = st.selectbox(
-                "Y-Axis Parameter", plot_cols, index=y_idx,
-                key="y_axis_afterglow",
-                format_func=lambda y: PARAM_SETTINGS.get(y, {}).get('name', y)
-                )
-            
-            y_log = st.segmented_control(
-                "Y-Axis scale", ("Linear-scale", "Log-scale"),
-                selection_mode='single',
-                default=persistent['y_log'],
-                key='y_log_afterglow',
-                label_visibility='collapsed'
-                )
-            
-        with lcol:
-            color_options = ["None", "Specific GRB"] + plot_cols
-            c_idx = color_options.index(persistent['color_by']) if persistent['color_by'] in color_options else 0
-            
-            color_by = st.selectbox(
-                "Color By", color_options,
-                index=c_idx,
-                key="color_by_flares",
-                format_func=lambda c: PARAM_SETTINGS.get(c, {}).get('name', c)
-                )
-        
-            if color_by == "Specific GRB":
-                selected_grbs = st.multiselect(
-                    "Enter GRB Names:",
-                    GRB_NAMES,
-                    placeholder='Select GRBs',
-                    default=shared_grbs,
-                    label_visibility='collapsed',
-                    key="shared_grbs_afterglow")
-                st.session_state['popstats_shared_grbs'] = selected_grbs
-                selected_grbs = [x.replace(' ', '') for x in st.session_state['popstats_shared_grbs']]
-        
-
-    st.session_state['popstats_afterglow'] = {
-        'x_axis': x_axis,
-        'y_axis': y_axis,
-        'x_log': x_log,
-        'y_log': y_log,
-        'color_by': color_by,
-    }
-
-
-    ############################################################
-    ## COLOURING CONFIG
-
-    legend_title = color_by
-    color_column = None
-    discrete_map = None
-    sorted_categorical = {"event_type": ["pulse", "flare"]}
-    color_seq = [COL_TERTIARY] + px.colors.qualitative.Plotly 
-    
-    
-    if color_by == "Specific GRB":
-        color_column = plot_data['GRBname'].apply(lambda x: x if x in selected_grbs else "Other GRBs")
-        discrete_map = {"Other GRBs": "#a8a8a8"}
-        
-    elif color_by != "None":
-        
-        color_column = color_by
-        legend_title = PARAM_SETTINGS[color_by].get('name', '')
-        
-        if PARAM_SETTINGS.get(color_column, {}).get('log'):
-            color_column = color_by + '_log'
-            legend_title = 'Log ' + legend_title
-
-        plot_data = plot_data[plot_data[color_by].notna() & (plot_data[color_by] != '<NA>')]
-        
-        unique_vals = plot_data[color_by].unique() # sorting for categorical values
-        sorted_values = sorted(unique_vals, key=lambda x: int(x))
-        sorted_categorical = {color_column: sorted_values}
-
-
-    ############################################################
-    ## PLOTTING COMMANDS
-
-    hover_dict = {
-        x_axis: ':.3g',
-        y_axis: ':.3g',
-    }
-    
-    custom_labels = {
-            x_axis: get_label(x_axis),
-            y_axis: get_label(y_axis),
-            color_by: get_label(color_by),
-            'GRBname': 'GRB Name',
-        }
 
 
     fig = px.scatter(
@@ -233,64 +104,7 @@ def population_afterglow(plot_data, plot_cols, GRB_NAMES):
         labels=custom_labels,
         template='ggplot2'
     )
-    
-    ############################################################
-    ## AXIS CONFIGS
 
-    fig.update_traces(marker=dict(size=10, line=dict(width=0.7, color='black')))
-
-    axis_settings = dict(showgrid=True, exponentformat="power")
-    fig.update_xaxes(**axis_settings)
-    fig.update_yaxes(**axis_settings)
-    
-    fig.update_coloraxes(colorbar_exponentformat="power", colorbar_title_text=legend_title)
-    
-    if x_log == 'Log-scale':
-        fig.update_xaxes(dtick=1)
-    if y_log == 'Log-scale':
-        fig.update_yaxes(dtick=1)
-        
-    fig.update_layout(
-        font=dict(size=16),
-        margin=dict(t=30),
-        legend_title_text=legend_title,
-        paper_bgcolor='rgb(255,255,255)',
-        font_color='black',
-        plot_bgcolor='rgb(240,242,246)',
-    )
-    
-    
-    if color_by == "Specific GRB":
-        color_cycle = px.colors.qualitative.Plotly
-        color_index = 0
-        
-        for trace in fig.data:
-            if trace.name in selected_grbs:
-                trace.marker.color = color_cycle[color_index % len(color_cycle)]
-                trace.marker.size = 15
-                trace.marker.line = dict(width=2, color='black')
-                color_index += 1
-        
-        traces = list(fig.data)
-        traces.sort(key=lambda x: 1 if x.name in selected_grbs else 0)
-        fig.data = traces
-
-
-
-    ############################################################
-    ## EVENT HANDLING
-    
-    with st.container(border=True):
-                    
-        event = st.plotly_chart(fig, width='stretch', height=600, theme=None, on_select='rerun', selection_mode='points')
-        
-        if event and ("selection" in event) and len(event['selection']['points']) > 0:
-            clicked_grb = event['selection']['points'][0]['customdata'][0]
-            clicked_grb = clicked_grb[0:3] + ' ' + clicked_grb[3:]
-            
-            st.session_state['viewer_grb'] = clicked_grb
-            st.switch_page("pages/burst_viewer.py")
-            
             
 ################################################################
 ################################################################      

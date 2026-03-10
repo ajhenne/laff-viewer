@@ -27,3 +27,8 @@ PARAM_SETTINGS = {
     'total_flare_fluence': {'name': 'Total Flare Fluence', 'units': 'erg\u2009cm<sup>-2</sup>', 'log': True},
     'total_pulse_fluence': {'name': 'Total Pulse Fluence', 'units': 'erg\u2009cm<sup>-2</sup>', 'log': True},
 }
+
+
+COL_PRIMARY = "rgba(255, 140, 24, 1)"
+COL_SECONDARY = "rgba(72, 138, 139, 1)"
+COL_TERTIARY = "rgba(63, 81, 181, 1)"

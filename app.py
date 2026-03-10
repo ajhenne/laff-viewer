@@ -16,10 +16,6 @@ def load_data(filepath):
 
 load_css()
 
-COL_PRIMARY = "rgba(255, 140, 24, 1)"
-COL_SECONDARY = "rgba(72, 138, 139, 1)"
-COL_TERTIARY = "rgba(63, 81, 181, 1)"
-
 ###############################################################################
 ### DATASET SELECTION
 
@@ -52,11 +48,14 @@ LENGTHS = (
     len(tab_events[tab_events["event_type"] == "pulse"]),
 )
 
+# TODO combine logic for burst viewer into GRB_names
 combined_names = (
     tab_afterglow["GRBname"].unique().tolist() + tab_events["GRBname"].unique().tolist()
 )
 name_options = sorted(set(combined_names))
 name_options = [x[0:3] + " " + x[3:] for x in name_options]
+
+GRB_NAMES = sorted(set(tab_afterglow["GRBname"]) | set(tab_events["GRBname"]))
 
 
 ###############################################################################
